@@ -1,0 +1,91 @@
+.chat-login{
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 305px;
+  transform: translate(-50%,-70%);
+  background-color: white;
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  
+  &-top{
+    width: 100%;
+    height: 110px;
+    overflow: hidden;
+    position: relative;
+    &-avator{
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      top:50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      z-index: 30;
+      background-color: #fff;
+      border-radius: 50%;
+      box-shadow: 0px 0px 4px 2px rgba(0,0,0,0.45);
+    }
+  }
+  &-form{
+    width: calc(100% - 170px);
+    padding:0 85px;
+    flex: 1;
+    &-item{
+      margin-bottom: 22px;
+      line-height: 40px;
+    }
+    &-submit{
+      width: 100%;
+      height: 28px;
+    }
+  }
+}
+
+
+.wave {
+  position: relative;
+  width: 400px;
+  height: 100%;
+  background-color: #76daff;
+}
+.wave::before, .wave::after {
+  content: "";
+  position: absolute;
+  width: 1000px;
+  height: 1000px;
+  top: -230px;
+  left: 49%;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 45%;
+  transform: translate(-50%, -70%) rotate(0);
+  -webkit-animation: rotate 13s linear infinite;
+          animation: rotate 13s linear infinite;
+  z-index: 10;
+}
+.wave::after {
+  border-radius: 47%;
+  background-color: rgba(255, 255, 255, 0.9);
+  transform: translate(-50%, -70%) rotate(0);
+  -webkit-animation: rotate 10s linear -7s infinite;
+          animation: rotate 10s linear -7s infinite;
+  z-index: 20;
+}
+
+@-webkit-keyframes rotate {
+  50% {
+    transform: translate(-50%, -70%) rotate(180deg);
+  }
+  100% {
+    transform: translate(-50%, -70%) rotate(360deg);
+  }
+}
+
+@keyframes rotate {
+  50% {
+    transform: translate(-50%, -71%) rotate(180deg);
+  }
+  100% {
+    transform: translate(-50%, -70%) rotate(360deg);
+  }
+}
