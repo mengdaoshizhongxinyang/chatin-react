@@ -2,19 +2,25 @@
 
 .@{name}-affix-wrapper{
   box-sizing: border-box;
-  width: 100%;
-  line-height: 1.5;
-  color: rgba(0,0,0,0.65);
-  position: relative;
-  margin: 0;
-  display: inline-block;
+    margin: 0;
+    padding: 0;
+    color: rgba(0,0,0,.65);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5;
+    list-style: none;
+    font-feature-settings: "tnum";
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    text-align: start;
   .@{name}-prefix{
     left:12px;
     position: absolute;
     top: 50%;
     line-height: 0;
     align-items: center;
-    transform: translate(-50%);
+    transform: translateY(-50%);
   }
   .@{name}{
     &:not(:last-child){

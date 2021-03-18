@@ -5,8 +5,17 @@
  */
 import React from "react";
 import style from "./input.module.less";
-const Input:React.FC<{}>=()=>{
+
+interface Props {
+  prefix?:  React.ReactNode
+}
+const Input: React.FC<Props> = (props) => {
   return <span className={`${style['chat-input-affix-wrapper']} ${style['chat-input-large']}`}>
+    {
+      props.prefix ? <span className={style['chat-input-prefix']}>
+        {props.prefix}
+      </span> : null
+    }
     <input className={style['chat-input']} />
   </span>
 }

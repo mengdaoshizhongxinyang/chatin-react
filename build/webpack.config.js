@@ -74,7 +74,11 @@ var webpackOptions = {
                 ]
             },
             {
-                test: /\.glsl$/i,
+                test: /\.svg$/,
+                use: ['@svgr/webpack'],
+            },
+            {
+                test: /\.(glsl)$/i,
                 use: 'raw-loader'
             },
             {

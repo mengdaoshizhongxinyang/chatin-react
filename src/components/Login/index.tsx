@@ -4,8 +4,9 @@
  * @Description: 
  */
 import React from "react";
-import Input from "../Input";
+import Input from "../input";
 import style from "./login.module.less";
+import Icon from "../icon";
 const Login: React.FC<{}> = () => {
   return <div className={style['chat-login']}>
     <div className={style['chat-login-top']}>
@@ -14,10 +15,10 @@ const Login: React.FC<{}> = () => {
     </div>
     <div className={style['chat-login-form']}>
       <div className={style['chat-login-form-item']}>
-        <Input />
+        <Input prefix={<Icon iconName={'User'}></Icon>}/>
       </div>
       <div className={style['chat-login-form-item']}>
-        <Input />
+        <Input prefix={<Icon iconName={'Password'}></Icon>}/>
       </div>
       <button className={style['chat-login-form-submit']}></button>
     </div>

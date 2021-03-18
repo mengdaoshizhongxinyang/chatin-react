@@ -5,7 +5,7 @@
  */
 import React, { useState } from "react";
 import style from "./chatin.module.less";
-import Login from "../components/Login";
+import Login from "../components/login";
 const chatin: React.FC<{}> = () => {
   console.log(style)
   const [content, setContent] = useState<string>("")

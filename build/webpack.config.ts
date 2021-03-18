@@ -86,6 +86,10 @@ const webpackOptions: Webpack.Configuration & WebpackDevServerOptions = {
         ]
       },
       {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      },
+      {
         test: /\.glsl$/i,
         use: 'raw-loader',
       },
