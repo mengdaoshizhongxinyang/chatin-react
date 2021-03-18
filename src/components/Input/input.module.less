@@ -1,34 +1,47 @@
-@name:~"chat-input";
+@name: ~"chat-input";
 
-.@{name}-affix-wrapper{
+.@{name}-affix-wrapper {
   box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    color: rgba(0,0,0,.65);
-    font-size: 14px;
-    font-variant: tabular-nums;
-    line-height: 1.5;
-    list-style: none;
-    font-feature-settings: "tnum";
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    text-align: start;
-  .@{name}-prefix{
-    left:12px;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, .65);
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5;
+  list-style: none;
+  font-feature-settings: "tnum";
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  text-align: start;
+
+  .@{name}-prefix {
+    left: 12px;
     position: absolute;
     top: 50%;
     line-height: 0;
     align-items: center;
     transform: translateY(-50%);
   }
-  .@{name}{
-    &:not(:last-child){
+
+  .@{name}-suffix {
+    right: 12px;
+    position: absolute;
+    top: 50%;
+    line-height: 0;
+    align-items: center;
+    transform: translateY(-50%);
+  }
+
+  .@{name} {
+    &:not(:last-child) {
       padding-right: 30px;
     }
-    &:not(:first-child){
+
+    &:not(:first-child) {
       padding-left: 30px;
     }
+
     box-sizing: border-box;
     display: inline-block;
     height: 32px;
@@ -42,19 +55,30 @@
     line-height: 1.5;
     width: 100%;
     outline: 0;
-    &:hover{
-      border-bottom: 1px solid rgba(118,234,255,0.85);
+
+    &:hover {
+      border-bottom: 1px solid rgba(118, 234, 255, 0.85);
     }
-    &:focus{
+
+    &:focus {
       outline: 0;
-      border-bottom: 1px solid rgb(118,234,255);
+      border-bottom: 1px solid rgb(118, 234, 255);
     }
   }
 }
 
-.@{name}-large{
+.@{name}-large {
   font-size: 18px;
-  .@{name}{
+
+  .@{name} {
     font-size: 18px;
+
+    &:not(:last-child) {
+      padding-right: 34px;
+    }
+
+    &:not(:first-child) {
+      padding-left: 34px;
+    }
   }
 }

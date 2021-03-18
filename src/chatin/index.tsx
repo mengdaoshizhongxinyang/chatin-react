@@ -7,8 +7,8 @@ import React, { useState } from "react";
 import style from "./chatin.module.less";
 import Login from "../components/login";
 const chatin: React.FC<{}> = () => {
-  console.log(style)
   const [content, setContent] = useState<string>("")
+  const [state,setState]=useState(0)
   const sendMessage = (message: string) => {
     // if (socket.readyState == WebSocket.OPEN) {
     // 	socket.send(message);
@@ -21,12 +21,15 @@ const chatin: React.FC<{}> = () => {
       sendMessage(content)
     }
   }
-  return (<div className={style["chat-body"]}>
-    <div className={style["chat-mask"]}>
-      <Login></Login>
-    </div>
-
-
+  function handleLogin(info:{user:string,password:string}){
+    console.log(info)
+  }
+  return <div className={style["chat-body"]}>
+    {
+      state?<div className={style["chat-mask"]}>
+        <Login onLogin={handleLogin}></Login>
+      </div>:null
+    }
     <div className={style['chat-contact-list']}></div>
     <div className={style['chat-border']}>
       <div className={style['chat-border-handle']}></div>
@@ -40,9 +43,14 @@ const chatin: React.FC<{}> = () => {
         <div className={style['chat-image']}>
           {/* <Icon icon="smile"></Icon> */}
         </div>
-        <input type="text" onKeyPress={(e)=>handleKeyPress(e)} value={content} onChange={(e) => setContent(e.target.value)} />
+        <input 
+          type="text" 
+          onKeyPress={handleKeyPress} 
+          value={content} 
+          onChange={(e) => setContent(e.target.value)} 
+        />
       </div>
     </div>
-  </div>)
+  </div>
 }
 export default chatin
