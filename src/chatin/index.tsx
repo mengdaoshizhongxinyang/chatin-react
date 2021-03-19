@@ -6,6 +6,7 @@
 import React, { useState } from "react";
 import style from "./chatin.module.less";
 import Login from "../components/login";
+import {HTTPRequest} from "@/utils/httpRequest";
 const chatin: React.FC<{}> = () => {
   const [content, setContent] = useState<string>("")
   const [state,setState]=useState(0)
@@ -15,14 +16,16 @@ const chatin: React.FC<{}> = () => {
     // } else {
     // 	alert("连接没有开启.");
     // }
-  } 
+  }
+  const request=new HTTPRequest('8080')
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key == 'Enter') {
       sendMessage(content)
     }
   }
-  function handleLogin(info:{user:string,password:string}){
-    console.log(info)
+  async function handleLogin(info:{user:string,password:string}){
+    let result = await request.login(info)
+    console.log(result)
   }
   return <div className={style["chat-body"]}>
     {

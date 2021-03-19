@@ -9,6 +9,7 @@
     "build-webpack-config": "tsc build/webpack.config.ts --esModuleInterop"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "gl-matrix": "^3.3.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

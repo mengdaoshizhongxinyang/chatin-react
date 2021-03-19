@@ -37,7 +37,7 @@ const Login: React.FC<Props> = (props) => {
           onEnterPress={handleEnterPress}
         />
       </div>
-      <button className={style['chat-login-form-submit']}>
+      <button className={style['chat-login-form-submit']} onClick={handleEnterPress}>
         登录
       </button>
     </div>
