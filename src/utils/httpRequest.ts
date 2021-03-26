@@ -38,7 +38,6 @@ export class HTTPRequest {
     }, ()=>{})
   }
   login(data:{user:string,password:string}):AxiosPromise<HTTPRequest.ReturnMessage<HTTPRequest.Friends>>{
-    console.log(data)
     return this.request({
       url:"login",
       method:"post",
