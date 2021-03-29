@@ -3,8 +3,7 @@
   position: relative;
   color: #000;
   width: auto;
-  display:inline;
-  margin-left: 12px;
+  display:inline-block;
   padding: 0.65em 1em 0.65em 1.5em;
   z-index: 1;
   overflow: hidden;
@@ -12,22 +11,53 @@
     position: absolute;
     z-index: -1;
     right: 0;
-    width: calc(100% - 0.5em);
-    border-radius: 5px 5px 5px 0px;
-    background: #fff;
+    width: calc(100% - 7px);
+    background-color: #fff;
     height: 100%;
     bottom: 0;
     content: "";
   }
   &::after{
     position: absolute;
-    width: 0.5em;
-    height: 2em;
-    background: #fff;
-    overflow: hidden;
-    left: 0;
-    bottom: 0;
-    border-top-left-radius: 100%;
+    bottom: 0px;
+    width: 7px; 
+    height: 14px;
+    background-color: #fff;
     content: "";
+  }
+  &-sub{
+    font-size: 12px;
+    margin-left: 1em;
+    color: rgba(0,0,0,0.45);
+  }
+}
+
+.@{name}-left{
+  &::before{
+    right: 0;
+    border-radius: 5px 5px 5px 0px;
+  }
+  &::after{
+    left: 0;
+    clip-path: path('M 0 14 C 7 11,7 0,7 0 v 14');
+  }
+}
+.@{name}-right{
+  &::before{
+    left: 0;
+    border-radius: 5px 5px 0px 5px;
+  }
+  &::after{
+    right: 0;
+    clip-path: path('M 7 14 C 0 11,0 0,0 0 v 14');
+  }
+}
+.@{name}-primary{
+  color: #fff;
+  &::before{
+    background-color: #1890ff;
+  }
+  &::after{
+    background-color: #1890ff;
   }
 }
