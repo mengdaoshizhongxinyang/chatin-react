@@ -117,7 +117,8 @@ const chatin: React.FC<{}> = () => {
               <Bubble
                 time={"12:01PM"}
                 position="right"
-              >{item.message}
+                content={item.message}
+              >
               </Bubble>
             </div>
           })
