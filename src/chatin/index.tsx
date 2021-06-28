@@ -41,7 +41,8 @@ interface MessageListItem extends Sender {
   time: number
 }
 
-let wsc = new WebSocketCollection("get_msg")
+// let wsc = new WebSocketCollection()
+let wsc = new WebSocket("ws://127.0.0.1:8888/get_msg")
 
 const chatin: React.FC<{}> = () => {
   const [content, setContent] = useState<string>("")
@@ -60,20 +61,23 @@ const chatin: React.FC<{}> = () => {
       sendMessage(content)
     }
   }
-  useEffect(() => {
-    // Update the document title using the browser API
-    wsc.register('get_msg', (message) => {
-      const msg: HertType | Message = JSON.parse(message.data)
-      if (msg.post_type == "message") {
+  const handleSend=()=>{
+    wsc.send('111')
+  }
+  // useEffect(() => {
+  //   // Update the document title using the browser API
+  //   wsc.register('get_msg', (message) => {
+  //     const msg: HertType | Message = JSON.parse(message.data)
+  //     if (msg.post_type == "message") {
 
-        setMessageList(arr => [...arr, {
-          ...msg.sender,
-          time: msg.time,
-          message: msg.message
-        }])
-      }
-    })
-  },[]);
+  //       setMessageList(arr => [...arr, {
+  //         ...msg.sender,
+  //         time: msg.time,
+  //         message: msg.message
+  //       }])
+  //     }
+  //   })
+  // },[]);
 
   // let socket = new WebSocket("ws://127.0.0.1:6700/get_msg")
   // socket.onmessage = (message: MessageEvent<string>) => {
@@ -133,6 +137,9 @@ const chatin: React.FC<{}> = () => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
+        <button onClick={handleSend}>
+          {"发送"}
+        </button>
       </div>
     </div>
   </div>
