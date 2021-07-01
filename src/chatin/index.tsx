@@ -8,7 +8,11 @@ import style from "./chatin.module.less";
 import Login from "../components/login";
 import Bubble from "@/components/bubble";
 import { HTTPRequest } from "@/utils/httpRequest";
+import https from "https";
+import http from "http";
 import { WebSocketCollection } from "@/utils/webSocket";
+import { session } from "electron";
+import axios from "axios";
 interface BaseMessage {
   post_type: string
   time: number
@@ -42,12 +46,13 @@ interface MessageListItem extends Sender {
 }
 
 // let wsc = new WebSocketCollection()
-let wsc = new WebSocket("ws://127.0.0.1:8888/get_msg")
+// let wsc = new WebSocket("ws://127.0.0.1:8888/get_msg")
 
 const chatin: React.FC<{}> = () => {
   const [content, setContent] = useState<string>("")
   const [state, setState] = useState(0)
-  const [messageList, setMessageList] = useState<MessageListItem[]>([{ message: "s", user_id: 8786, time: 24, nickname: "5245", age: 0 }])
+  const [imgurl, setImgurl] = useState("")
+  const [messageList, setMessageList] = useState<MessageListItem[]>([{ message: "ssss", user_id: 8786, time: 24, nickname: "5245", age: 0 }])
   const sendMessage = (message: string) => {
     // if (socket.readyState == WebSocket.OPEN) {
     // 	socket.send(message);
@@ -61,23 +66,38 @@ const chatin: React.FC<{}> = () => {
       sendMessage(content)
     }
   }
-  const handleSend=()=>{
-    wsc.send('111')
+  const handleSend = () => {
+    // wsc.send('111')
   }
-  // useEffect(() => {
-  //   // Update the document title using the browser API
-  //   wsc.register('get_msg', (message) => {
-  //     const msg: HertType | Message = JSON.parse(message.data)
-  //     if (msg.post_type == "message") {
+  useEffect(() => {
+    https.get("https://tiebapic.baidu.com/forum/pic/item/e61190ef76c6a7ef46147095eafaaf51f3de6657.jpg", (res) => {
+      console.log(res)
+      let data = ''
+      res.setEncoding('binary')
 
-  //       setMessageList(arr => [...arr, {
-  //         ...msg.sender,
-  //         time: msg.time,
-  //         message: msg.message
-  //       }])
-  //     }
-  //   })
-  // },[]);
+      // 一定要设置response的编码为binary否则会下载下来的图片打不开
+      // res.setEncoding("binary");
+      res.on('data', chunk => {
+        data+= chunk
+      }).on('end',()=>{
+        setImgurl('data:image/png;base64,'+btoa(data))
+        console.log(imgurl)
+      })
+      
+      // res.on('end', () => {
+      //   let p = path.join(__dirname, 'public/img/pa.jpg')
+
+      //   // 把二进制写成文件
+      //   fs.writeFile(p, data, "binary",err => {
+      //     if (err) {
+      //       console.log('这里发生错误')
+      //       throw err
+      //     }
+      //     console.log('趴取图片成功')
+      //   })
+      // })
+    })
+  });
 
   // let socket = new WebSocket("ws://127.0.0.1:6700/get_msg")
   // socket.onmessage = (message: MessageEvent<string>) => {
@@ -137,6 +157,12 @@ const chatin: React.FC<{}> = () => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
+        {
+          imgurl ?
+            <img src={imgurl} style={{ width: 20 }} alt="" />
+            : null
+        }
+
         <button onClick={handleSend}>
           {"发送"}
         </button>

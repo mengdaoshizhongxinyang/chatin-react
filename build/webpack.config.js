@@ -2,18 +2,19 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-const path=require("path")
+exports.__esModule = true;
+var html_webpack_plugin_1 = __importDefault(require("html-webpack-plugin"));
+var path = require("path");
 function srcPath(subdir) {
     return path.join(__dirname, "../", subdir);
 }
-exports.__esModule = true;
-var html_webpack_plugin_1 = __importDefault(require("html-webpack-plugin"));
 var webpackOptions = {
     mode: 'development',
+    target: 'electron-renderer',
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
-        alias:{
-            "@":srcPath('src')
+        alias: {
+            "@": srcPath('src')
         }
     },
     output: {
@@ -82,10 +83,10 @@ var webpackOptions = {
             },
             {
                 test: /\.svg$/,
-                use: ['@svgr/webpack'],
+                use: ['@svgr/webpack']
             },
             {
-                test: /\.(glsl)$/i,
+                test: /\.glsl$/i,
                 use: 'raw-loader'
             },
             {

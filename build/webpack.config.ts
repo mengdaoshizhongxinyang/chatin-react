@@ -14,11 +14,18 @@ interface WebpackDevServerOptions {
     port: number
   }
 }
-
+const path = require("path")
+function srcPath(subdir: string) {
+  return path.join(__dirname, "../", subdir);
+}
 const webpackOptions: Webpack.Configuration & WebpackDevServerOptions = {
   mode: 'development',
+  target: 'electron-renderer',
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+    alias: {
+      "@": srcPath('src')
+    }
   },
   output: {
     publicPath: '/'
@@ -47,22 +54,22 @@ const webpackOptions: Webpack.Configuration & WebpackDevServerOptions = {
           {
             loader: 'style-loader',
             options: {
-              esModule: true,
+              esModule: false,
               modules: {
-                namedExport: true,
+                namedExport: false,
               },
             },
           },
           {
             loader: 'css-loader',
             options: {
-              esModule: true,
+              esModule: false,
               modules: {
-                namedExport: true,
-                exportLocalsConvention: 'dashesOnly',
-                localIdentName: '[local]_[hash:base64:5]',
+                namedExport: false,
+                exportLocalsConvention: 'asIs',
+                localIdentName: '[local]_[hash:base64:5]'
               }
-            },
+            }
           },
           {
             loader: 'less-loader',
