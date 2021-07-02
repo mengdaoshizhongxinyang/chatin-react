@@ -8,11 +8,12 @@ import style from "./chatin.module.less";
 import Login from "../components/login";
 import Bubble from "@/components/bubble";
 import { HTTPRequest } from "@/utils/httpRequest";
+import os from "os"
 import https from "https";
 import http from "http";
+import net from "net";
 import { WebSocketCollection } from "@/utils/webSocket";
 import { session } from "electron";
-import axios from "axios";
 interface BaseMessage {
   post_type: string
   time: number
@@ -44,9 +45,10 @@ interface MessageListItem extends Sender {
   message: string
   time: number
 }
-
+type AllMessage = HertType | Message
+type MessageInfo<T extends AllMessage['post_type']> = Omit<Extract<AllMessage, { post_type: T }>, 'post_type'>
 // let wsc = new WebSocketCollection()
-// let wsc = new WebSocket("ws://127.0.0.1:8888/get_msg")
+let wsc = new WebSocket("ws://127.0.0.1:6700")
 
 const chatin: React.FC<{}> = () => {
   const [content, setContent] = useState<string>("")
@@ -70,34 +72,30 @@ const chatin: React.FC<{}> = () => {
     // wsc.send('111')
   }
   useEffect(() => {
-    https.get("https://tiebapic.baidu.com/forum/pic/item/e61190ef76c6a7ef46147095eafaaf51f3de6657.jpg", (res) => {
-      console.log(res)
-      let data = ''
-      res.setEncoding('binary')
-
-      // 一定要设置response的编码为binary否则会下载下来的图片打不开
-      // res.setEncoding("binary");
-      res.on('data', chunk => {
-        data+= chunk
-      }).on('end',()=>{
-        setImgurl('data:image/png;base64,'+btoa(data))
-        console.log(imgurl)
-      })
-      
-      // res.on('end', () => {
-      //   let p = path.join(__dirname, 'public/img/pa.jpg')
-
-      //   // 把二进制写成文件
-      //   fs.writeFile(p, data, "binary",err => {
-      //     if (err) {
-      //       console.log('这里发生错误')
-      //       throw err
-      //     }
-      //     console.log('趴取图片成功')
-      //   })
-      // })
-    })
-  });
+    // console.log(os.userInfo())
+    wsc.onmessage = (message: MessageEvent<string>) => {
+      const msg: AllMessage = JSON.parse(message.data)
+      // TODO: cq码的处理
+      if (msg.post_type == "message") {
+        setMessageList(messageList.concat([{
+          ...msg.sender,
+          time: msg.time,
+          message: msg.message
+        }]))
+      }
+    }
+  }, [])//{\"interval\":5000,\"meta_event_type\":\"heartbeat\",\"po…st_message_time\":1625210920}},\"time\":1625210920}\n
+  // useEffect(() => {
+  //   https.get("https://tiebapic.baidu.com/forum/pic/item/e61190ef76c6a7ef46147095eafaaf51f3de6657.jpg", (res) => {
+  //     let data = ''
+  //     res.setEncoding('binary')
+  //     res.on('data', chunk => {
+  //       data+= chunk
+  //     }).on('end',()=>{
+  //       setImgurl('data:image/png;base64,'+btoa(data))
+  //     })
+  //   })
+  // });
 
   // let socket = new WebSocket("ws://127.0.0.1:6700/get_msg")
   // socket.onmessage = (message: MessageEvent<string>) => {
