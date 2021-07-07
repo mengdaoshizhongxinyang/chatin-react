@@ -11,21 +11,21 @@ interface Props {
   type?: HTMLInputElement['type']
   value?: string
   onEnterPress?: (value: string) => void
-  onChange?:(value:string)=>void
-  suffix?:React.ReactNode
+  onChange?: (value: string) => void
+  suffix?: React.ReactNode
 }
 const Input: React.FC<Props> = (props) => {
   const [value, setValue] = useState(props.value || "")
   function handleKeyPress(e: React.KeyboardEvent) {
     if (e.code == "NumpadEnter" || e.code == "Enter") {
-      if(props.onEnterPress){
+      if (props.onEnterPress) {
         props.onEnterPress(value)
       }
     }
   }
-  function handleChange(value:string){
+  function handleChange(value: string) {
     setValue(value)
-    if(props.onChange){
+    if (props.onChange) {
       props.onChange(value)
     }
   }
@@ -37,10 +37,10 @@ const Input: React.FC<Props> = (props) => {
     }
     <input
       value={value}
-      className={style['chat-input']} 
-      type={props.type ? props.type : "text"} 
-      onKeyPress={handleKeyPress} 
-      onChange={(e) => handleChange(e.target.value)} 
+      className={style['chat-input']}
+      type={props.type ? props.type : "text"}
+      onKeyPress={handleKeyPress}
+      onChange={(e) => handleChange(e.target.value)}
     />
     {
       props.suffix ? <span className={style['chat-input-suffix']}>

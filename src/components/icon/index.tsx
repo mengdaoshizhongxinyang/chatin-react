@@ -6,9 +6,13 @@
 import React, { createElement, useEffect } from "react";
 import User from "./user.svg";
 import Password from "./password.svg";
+import QQ from "./QQ.svg";
+import home from "./home.svg";
 const iconList={
+  home,
   User,
-  Password
+  Password,
+  QQ
 }
 type SVG=JSX.IntrinsicElements['svg']
 interface Props extends SVG{
