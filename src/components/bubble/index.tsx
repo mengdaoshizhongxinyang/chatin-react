@@ -47,11 +47,11 @@ const bubble:React.FC<Props>=(props)=>{
       result.push(item)
     })
   }
-  return <div 
-    data-backcolor="#fff" 
-    className={`${style['bubble-main']}  
+  return <div
+    data-backcolor="#fff"
+    className={`${style['bubble-main']} 
     ${props.position=='right'?style['bubble-right']:style['bubble-left']} ${props.type?colorType[props.type]:''}`
-  }>{result}<sub className={style['bubble-main-sub']}>{props.time}</sub>
+  }>{props.children?props.children:result}<sub className={style['bubble-main-sub']}>{props.time}</sub>
   </div>
 }
 export default bubble

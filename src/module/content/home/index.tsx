@@ -4,7 +4,11 @@
  * @Description: 
  */
 import React from "react";
+
 const home:React.FC<{}>=()=>{
-  return <div></div>
+  return <div>
+
+
+  </div>
 }
 export default home

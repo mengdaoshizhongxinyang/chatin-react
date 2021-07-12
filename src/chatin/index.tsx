@@ -16,7 +16,7 @@ const chatin: React.FC<{}> = () => {
       {
         IconList.map((key) => {
           return <div key={key} onClick={() => setState(key)} className={style['icon']}>
-            <Icon iconName={key} width={30} height={30} color={'#444'}></Icon>
+            <Icon iconName={key} width={30} height={30} fill={'#444'}></Icon>
           </div>
         })
       }
