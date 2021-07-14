@@ -10,6 +10,10 @@ type Props = {
   message: string
 }
 
+//(?<=\[CQ:image,.+?url=)(.+?)(?=\])
+
+
+
 
 const handleCQcode = (cqcode: CQcode) => {
   let cqcodeObject: CQcodeObject = Object.fromEntries(

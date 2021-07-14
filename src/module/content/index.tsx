@@ -5,6 +5,7 @@
  */
 import QQ from "./qq";
 import Home from "./home";
+import Terminal from "./terminal";
 import React from "react";
 type Props={
   state:States
@@ -15,6 +16,8 @@ function RenderContent(state:States){
       return <QQ />
     case "home":
       return <Home />
+    case "terminal":
+      return <Terminal />
   }
 }
 const content:React.FC<Props>=(props)=>{
@@ -25,4 +28,4 @@ const content:React.FC<Props>=(props)=>{
   </>
 }
 export default content
-export type States="QQ" | "home"
+export type States="QQ" | "home" | "terminal"

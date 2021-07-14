@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import style from "./chatin.module.less";
 import Content, { States } from "@/module/content";
 import Icon from "@/components/icon";
-const IconList: States[] = ['home', 'QQ']
+const IconList: States[] = ['home', 'QQ','terminal']
 const chatin: React.FC<{}> = () => {
   const [state, setState] = useState<States>("home")
 
