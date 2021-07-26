@@ -9,12 +9,14 @@ import Password from "./password.svg";
 import QQ from "./QQ.svg";
 import home from "./home.svg";
 import terminal from "./terminal.svg";
+import folder from "./folder.svg";
 const iconList={
   home,
   User,
   Password,
   QQ,
-  terminal
+  terminal,
+  folder
 }
 type SVG=JSX.IntrinsicElements['svg']
 interface Props extends SVG{

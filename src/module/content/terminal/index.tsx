@@ -4,15 +4,16 @@
  * @Description: 
  */
 import React, { useEffect, useRef, useState } from "react";
-
+import { spawn } from "child_process";
 import { ipcRenderer } from "electron";
 import style from "./terminal.module.less";
 type Command = {
+  code:number
   command: string
   path: String
   commandMsg: string
 }
-type CommandMsgs=string[]
+type CommandMsgs = string[]
 function getOsInfo() {
   var userAgent = navigator.userAgent.toLowerCase()
   var name = 'Unknown'
@@ -42,54 +43,96 @@ function getOsInfo() {
 
 const terminal: React.FC<{}> = () => {
   const [commandArr, setCommandArr] = useState<Command[]>([])
-  const [command,setCommand]=useState("")
-  const [commandMsg,setCommandMsg]=useState<string[]>([])
-  const [addPath,setAddPath]=useState("")
-  const [path,setPath]=useState("")
-  const [isActived,setIsActived]=useState(false)
-  const inputDom=useRef<HTMLSpanElement>(null)
-  const [action,setAction]=useState(false)
-  function keyFn(e:React.KeyboardEvent) {
-    if (e.key == "enter" || e.key=="Numenter") {
-      // actionCommand()
+  const [command, setCommand] = useState("")
+  // const [commandMsg, setCommandMsg] = useState<string[]>([])
+  let commandMsg:string[]=[]
+  const [addPath, setAddPath] = useState("")
+  const [path, setPath] = useState("")
+  const [isActived, setIsActived] = useState(false)
+  const inputDom = useRef<HTMLSpanElement>(null)
+  const [action, setAction] = useState(false)
+  function keyFn(e: React.KeyboardEvent) {
+    if (e.code == "Enter" || e.code == "NumpadEnter") {
+      actionCommand()
       e.preventDefault()
     }
   }
-  // function actionCommand() {
-  //   const cmd=command.trim()
-  //   isClear(command)
-  //   if (this.command === '') return
-  //   this.action = true
-  //   this.handleCommand = this.cdCommand(command)
-  //   const ls = spawn(this.handleCommand, {
-  //     encoding: 'utf8',
-  //     cwd: this.path, // 执行命令路径
-  //     shell: true, // 使用shell命令
-  //   })
-  //   // 监听命令行执行过程的输出
-  //   ls.stdout.on('data', (data) => {
-  //     const value = data.toString().trim()
-  //     this.commandMsg.push(value)
-  //     console.log(`stdout: ${value}`)
-  //   })
-  //   // 错误或详细状态进度报告 比如 git push、 git clone 
-  //   ls.stderr.on('data', (data) => {
-  //     const value = data.toString().trim()
-  //     this.commandMsg.push(`stderr: ${data}`)
-  //     console.log(`stderr: ${data}`)
-  //   })
-  //   // 子进程关闭事件 保存信息 更新状态
-  //   ls.on('close', this.closeCommandAction) 
-  // }
-  function isClear(command:string) {
+
+  const [handleCommand, setHandleCommand] = useState("")
+  function cdCommand(cmd: string) {
+    let pathCommand = ''
+    if (cmd.startsWith('cd ')) {
+      pathCommand = addPath
+    } else if (cmd.indexOf(' cd ') !== -1) {
+      pathCommand = addPath
+    }
+    return cmd + pathCommand
+  }
+  function actionCommand() {
+    let cmd = command.trim()
+    let clearFlag=isClear(cmd)
+    if(clearFlag){
+      return
+    }
+    if (cmd === '') return
+    setAction(true)
+    const t=cdCommand(cmd)
+    setHandleCommand(cdCommand(cmd))
+    const ls = spawn(`powershell ${t}`, {
+      
+      cwd: path, // 执行命令路径
+      shell: true, // 使用shell命令
+    })
+    // 监听命令行执行过程的输出
+    ls.stdout.on('data', (data) => {
+      const value = data.toString().trim()
+      commandMsg.push(value)
+    })
+    // 错误或详细状态进度报告 比如 git push、 git clone 
+    ls.stderr.on('data', (data) => {
+      const value = data.toString().trim()
+      commandMsg.push(`stderr: ${data}`)
+    })
+    // 子进程关闭事件 保存信息 更新状态
+    ls.on('close', closeCommandAction)
+  }
+  function closeCommandAction(code:number) {
+    // 保存执行信息
+    setCommandArr(commandArr.concat([{
+      code, // 是否执行成功
+      path: path, // 执行路径
+      command: command, // 执行命令
+      commandMsg: commandMsg.join('\r\n'), // 执行信息
+    }]))
+    // 清空
+    updatePath(handleCommand, code)
+    commandFinish()
+
+    setCommand("")
+  }
+  function updatePath(command:string, code:number) {
+    if (code !== 0) return
+    
+    const isPathChange = command.indexOf(addPath) !== -1
+    if (isPathChange) {
+      setPath(commandMsg[commandMsg.length-1])
+    }
+    
+  }
+  function isClear(command: string) {
     if (command === 'clear') {
       setCommandArr([])
       commandFinish()
+      return true
     }
+    return false
   }
   function commandFinish() {
-    setCommandMsg([])
+    commandMsg=[]
     setCommand('')
+    if(inputDom.current?.textContent){
+      inputDom.current.textContent=''
+    }
     // this.inputDom.textContent = ''
     // this.action = false
     // // 激活编辑器
@@ -98,24 +141,23 @@ const terminal: React.FC<{}> = () => {
     //   this.scrollBottom()
     // })
   }
-  useEffect(()=>{
+  useEffect(() => {
     const systemName = getOsInfo()
-    if(systemName==='Mac'){
+    if (systemName === 'Mac') {
       setAddPath(' && pwd')
-    }else if(systemName==='Windows'){
+    } else if (systemName === 'Windows') {
       setAddPath(' && chdir')
     }
     setPath(process.cwd())
-    ipcRenderer.on('win-focus',(event,message)=>{
-      console.log(event,message)
+    ipcRenderer.on('win-focus', (event, message) => {
       setIsActived(true)
     })
-  },[])
-  const commandMsgs:CommandMsgs=[]
+  }, [])
+  const commandMsgs: CommandMsgs = []
   return <div className={style['main-class']}>
     {
-      commandArr.map(command => {
-        return <div>
+      commandArr.map((command,index) => {
+        return <div key={index}>
           <div className={style['command-action']}>
             <span className={style['command-action-path']}>{command.path}</span>
             <span className={style['command-action-contenteditable']}>{command.command}</span>
@@ -126,17 +168,18 @@ const terminal: React.FC<{}> = () => {
     }
     <div className={`${style['command-action']} ${style['command-action-editor']}`}>
       <span className={style['command-action-path']}>{`${path} $`}</span>
-      <span 
+      <span
         ref={inputDom}
         className={style['command-action-contenteditable']}
-        contentEditable={action?false:'true'}
-        onChange={(e:React.ChangeEvent<HTMLSpanElement>)=>setCommand(e.target.textContent || "")}
+        contentEditable={'true'}
+        onInput={(e: React.ChangeEvent<HTMLSpanElement>) => {setCommand(e.target.textContent || "")}}
+        onKeyDown={keyFn}
       ></span>
     </div>
     <div className={style['output-command']}>
       {
-        commandMsgs.map(commandMsg=>{
-          return <div>{commandMsg}</div>
+        commandMsgs.map((commandMsg,index) => {
+          return <div key={index}>{commandMsg}</div>
         })
       }
     </div>
