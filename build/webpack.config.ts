@@ -19,6 +19,9 @@ function srcPath(subdir: string) {
   return path.join(__dirname, "../", subdir);
 }
 const webpackOptions: Webpack.Configuration & WebpackDevServerOptions = {
+  externals:{
+    'sqlite3':'commonjs sqlite3'
+  },
   mode: 'development',
   target: 'electron-renderer',
   resolve: {

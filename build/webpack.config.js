@@ -9,6 +9,9 @@ function srcPath(subdir) {
     return path.join(__dirname, "../", subdir);
 }
 var webpackOptions = {
+    externals: {
+        'sqlite3': 'commonjs sqlite3'
+    },
     mode: 'development',
     target: 'electron-renderer',
     resolve: {
