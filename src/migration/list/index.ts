@@ -4,6 +4,6 @@
  * @Description: 
  */
 import createQQFriendsList210825 from "./createQQFriendsList210825";
-export const list={
+export const list=[
     createQQFriendsList210825
-} 
+]
