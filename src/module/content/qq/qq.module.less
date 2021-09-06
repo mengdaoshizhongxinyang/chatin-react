@@ -8,6 +8,42 @@
 
 .chat-contact-list {
   min-width: 200px;
+  border-right: 1px solid rgba(0,0,0,0.2);
+  .contact-base-info{
+    height: 62px;
+    padding: 0.5em;
+    line-height: 1em;
+    display: flex;
+    
+    .avatar{
+      width: 48px;
+      height: 48px;
+    }
+    .text{
+      flex: 1;
+      height: 48px;
+      width: calc(100% - 48px);
+      .top{
+        display: flex;
+        padding: 0.3em 0.5em;
+        .name{
+          white-space:nowrap;
+          overflow:hidden;
+          text-overflow:ellipsis;
+          flex: 1px;
+          overflow: hidden;
+        }
+        .time{
+          color:rgba(0,0,0,0.2);
+          padding-left: 0.5em;
+        }
+      }
+      .message{
+        color:rgba(0,0,0,0.2);
+        overflow: hidden;
+      }
+    }
+  }
 }
 
 .chat-contact-avatar-list {

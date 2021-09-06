@@ -12,7 +12,7 @@ type Command = {
   command: string
   path: String
   commandMsg: string
-}
+}  
 type CommandMsgs = string[]
 function getOsInfo() {
   var userAgent = navigator.userAgent.toLowerCase()
@@ -149,7 +149,7 @@ const terminal: React.FC<{}> = () => {
       setAddPath(' && chdir')
     }
     setPath(process.cwd())
-    ipcRenderer.on('win-focus', (event, message) => {
+    ipcRenderer.on('win-focus', (event:any, message:any) => {
       setIsActived(true)
     })
   }, [])
