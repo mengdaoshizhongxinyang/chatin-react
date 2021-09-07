@@ -4,12 +4,16 @@
  * @Description: 
  */
 import { getDB } from "@/utils/db";
+import inflect  from "i";
 export class Model<T extends {[key in string]:unknown}>{
     constructor(){
-        this.tableName=this.constructor.name
+        if(this.tableName==''){
+            console.log(inflect())
+            this.tableName=inflect().tableize(this.constructor.name)
+        }
     }
     protected fillable:Model.Fillable<T>=[]
-    private tableName=''
+    protected tableName=''
     private inValue:string[]=[]
     private whereValues:{field:string,option:string,value:unknown}[]=[]
 
@@ -26,14 +30,23 @@ export class Model<T extends {[key in string]:unknown}>{
     destroy(){
         
     }
-    
-    get(number:number){
 
+    async get<T =Record<string,unknown>>(number:number|undefined=undefined){
+        let db=await getDB()
+        console.log(this.selectSql())
+        return await db.all<T>(this.selectSql())
     }
     
-    test(){
-        return this.tableName
+    first(){
+        
     }
+
+    private selectSql(){
+        return `select ${this.fillable.join(',')} from ${this.tableName}${this.whereValues.length>0?
+            ` where ${this.whereValues.map(where=>`${where.field} ${where.option} ${where.value}`).join(' AND ')}`:''}
+        `
+    }
+    
 }
 export namespace Model{
     export type Fillable<T extends {[key in string]:unknown}={}>=(keyof T)[]

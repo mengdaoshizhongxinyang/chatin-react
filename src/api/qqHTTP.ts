@@ -17,8 +17,11 @@ interface BaseResult<T> {
 export async function getFriendsList(isFresh: boolean = false) {
     let needFresh = isFresh
     let db = await getDB()
+    let friend=new Friend()
     try {
-        let res = await db.all<Friend.Field>('select * from friends')
+        // let res = await db.all<Friend.Field>('select * from friends')
+        let res=await friend.get<Friend.Field>()
+        console.log(2222)
         if (res.length == 0) {
             needFresh = true
         }
@@ -38,9 +41,8 @@ export async function getFriendsList(isFresh: boolean = false) {
             db.close()
         }
     } catch (e) {
+        console.log(e)
         db.close()
         return []
     }
-
-
 }

@@ -6,8 +6,8 @@
 import { sqlite3, verbose, Database } from "sqlite3";
 let sqlite3 = verbose()
 export async function getDB() {
-    let db=await (()=>new Promise<Database>((resolve, reject) => {
-        let db=new sqlite3.Database('./db.db', (err) => {
+    let db = await (() => new Promise<Database>((resolve, reject) => {
+        let db = new sqlite3.Database('./db.db', (err) => {
             if (err === null) {
                 resolve(db)
             } else {
@@ -30,8 +30,29 @@ class DB {
             })
         })
     }
-    all<T extends Object = any>(sql: string, params: unknown = undefined): Promise<T[]> {
-        return new Promise((resolve, reject) => {
+    get<T extends Object = any>(sql: string, params: any = undefined) {
+        return new Promise<T>((resolve, reject) => {
+            if (params == undefined) {
+                this.db.get(sql, (err, data) => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(data)
+                    }
+                })
+            } else {
+                this.db.get(sql, params, (err, data) => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(data)
+                    }
+                })
+            }
+        })
+    }
+    all<T extends Object = any>(sql: string, params: unknown = undefined) {
+        return new Promise<T[]>((resolve, reject) => {
             if (params == undefined) {
                 this.db.all(sql, (err, data) => {
                     if (err) {
