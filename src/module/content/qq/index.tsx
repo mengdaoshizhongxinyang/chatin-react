@@ -80,11 +80,17 @@ const QQ: React.FC<{}> = () => {
     //   console.log(err)
     // })
   }
-  useEffect(() => {
-    // console.log(os.userInfo())
-    getFriendsList((friends)=>{
+  async function setFriendsList(){
+    let friends=await getFriendsList()
+    console.log(friends)
+    if(friends){
       setFriends(friends)
-    })
+    }
+    
+  }
+  useEffect(() => {
+    setFriendsList()
+    // console.log(os.userInfo())
     // wsc.onmessage = (message: MessageEvent<string>) => {
     //   const msg: AllMessage = JSON.parse(message.data)
     //   // TODO: cq码的处理

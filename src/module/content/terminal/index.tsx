@@ -149,7 +149,7 @@ const terminal: React.FC<{}> = () => {
       setAddPath(' && chdir')
     }
     setPath(process.cwd())
-    ipcRenderer.on('win-focus', (event:any, message:any) => {
+    ipcRenderer.on('win-focus', (event, message) => {
       setIsActived(true)
     })
   }, [])
