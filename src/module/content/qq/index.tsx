@@ -82,7 +82,6 @@ const QQ: React.FC<{}> = () => {
   }
   async function setFriendsList(){
     let friends=await getFriendsList()
-    console.log(friends)
     if(friends){
       setFriends(friends)
     }
