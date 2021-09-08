@@ -72,6 +72,17 @@ class DB {
             }
         })
     }
+    exec(sql:string){
+        return new Promise((reslove,reject)=>{
+            this.db.exec(sql,(err)=>{
+                if(err==null){
+                    reslove(true)
+                }else{
+                    reject(err)
+                }
+            })
+        })
+    }
     close() {
         this.db.close()
     }
