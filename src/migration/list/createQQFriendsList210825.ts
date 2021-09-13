@@ -5,9 +5,9 @@
  */
 import { Schema } from "@/utils/schema"
 export default function createQQFriendsList210825() {
-    return new Schema('friends', 'create', (table) => {
+    return Schema.Create('friends', (table) => {
         table.string('nickname').notNull()
         table.string('remark').setLength(100)
         table.integer('user_id')
-    }).get()
+    })
 }

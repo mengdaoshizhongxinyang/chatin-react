@@ -9,6 +9,21 @@ declare module "i"{
         classify:(table_name:string)=>string
         dasherize:(underscored_word:string)=>string
         tableize:(class_name:string)=>string
+        demodulize:(class_name_in_module:string)=>string
+        foreign_key:(class_name:string,separate_class_name_id_with_underscore:string)=>string
+        inflections:{
+            humans:string[]
+            plurals:[RegExp,string][]
+            singulars:[RegExp,string][]
+            uncountables:string[]
+        }
+        ordinalize:(number:number)=>string
+        pluralize:(word:string)=>string
+        singularize:(word:string)=>string
+        tableize:(class_name:string)=>string
+        titleize:(word:string)=>string
+        uncountability:(word:string)=>string
+        underscore:(camel_cased_word:string)=>string
     }
     export default Inflect
 }
