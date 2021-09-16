@@ -16,7 +16,8 @@ const iconList={
   Password,
   QQ,
   terminal,
-  folder
+  folder,
+  testControl:terminal
 }
 type SVG=JSX.IntrinsicElements['svg']
 interface Props extends SVG{

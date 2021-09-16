@@ -7,6 +7,7 @@ import QQ from "./qq";
 import Home from "./home";
 import Terminal from "./terminal";
 import Folder from "./folder";
+import TestControl from "./testControl";
 import React from "react";
 type Props={
   state:States
@@ -21,6 +22,8 @@ function RenderContent(state:States){
       return <Terminal />
     case "folder":
       return <Folder />
+    case "testControl":
+      return <TestControl />
   }
 }
 const content:React.FC<Props>=(props)=>{
@@ -31,4 +34,4 @@ const content:React.FC<Props>=(props)=>{
   </>
 }
 export default content
-export type States="QQ" | "home" | "terminal" | "folder"
+export type States="QQ" | "home" | "terminal" | "folder" |"testControl"
