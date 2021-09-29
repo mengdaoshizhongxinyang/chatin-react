@@ -1,10 +1,11 @@
 /*
  * @Author: mengdaoshizhongxinyang
- * @Date: 2021-09-06 13:48:19
+ * @Date: 2021-09-26 21:55:17
  * @Description: 
  */
-import {Model} from "../model";
-
-export class Friend extends Model<Friend.Field>{
-    protected fillable:Model.Fillable<Friend.Field>=['nickname','remark','user_id']
+import { Friend } from "./friend";
+import { Group } from "./group";
+export{
+    Friend,
+    Group
 }

@@ -17,10 +17,19 @@ export async function getDB() {
     }))()
     return new DB(db)
 }
+type PRAGMA={
+    cid:number
+    dflt_value:any
+    name:string
+    notnull:0|1
+    pk:number
+    type:string
+}
 class DB {
     constructor(private db: Database) { }
     run(sql: string, params: any = []) {
         return new Promise((resolve, reject) => {
+            console.log(sql)
             this.db.run(sql, params, (result) => {
                 if (result == null) {
                     resolve(result)
@@ -77,6 +86,17 @@ class DB {
             this.db.exec(sql,(err)=>{
                 if(err==null){
                     reslove(true)
+                }else{
+                    reject(err)
+                }
+            })
+        })
+    }
+    pragma(table:string){
+        return new Promise<PRAGMA[]>((reslove,reject)=>{
+            this.db.all(`PRAGMA table_info(${table})`,(err,data)=>{
+                if(err==null){
+                    reslove(data)
                 }else{
                     reject(err)
                 }

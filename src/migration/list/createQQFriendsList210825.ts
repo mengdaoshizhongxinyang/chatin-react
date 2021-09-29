@@ -9,5 +9,6 @@ export default function createQQFriendsList210825() {
         table.string('nickname').notNull()
         table.string('remark').setLength(100)
         table.integer('user_id')
+        table.integer('is_use').default(0)
     })
 }

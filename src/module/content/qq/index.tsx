@@ -4,64 +4,30 @@
  * @Description: 
  */
 import React, { useState, useEffect } from "react";
-import style from "./qq.module.less";
+import style, { message } from "./qq.module.less";
 import Login from "@/components/login";
 import Bubble from "@/components/bubble";
 import { HTTPRequest } from "@/utils/httpRequest";
 import os from "os"
-
+import { qqHelper } from "@/helper/qq";
 import net from "net";
 import { WebSocketCollection } from "@/utils/webSocket";
-
+import { useStore } from "@/reducer";
 import { exec } from "child_process";
-import { getFriendsList } from "@/api/qqHTTP";
-interface BaseMessage {
-  post_type: string
-  time: number
-  self_id: number
-}
-interface HertType extends BaseMessage {
-  interval: number
-  meta_event_type: string
-  post_type: "meta_event"
-  status: { [key in string]: any }
-}
+import { Friend } from "@/model";
+import { Message } from "@/model/message";
 
-interface Sender {
-  age: number,
-  nickname: string,
-  user_id: number
-}
-interface Message extends BaseMessage {
-  font: number
-  message: string
-  message_id: number
-  post_type: "message"
-  raw_message: string
-  sender: Sender
-  sub_type: string
-  user_id: number
-}
-interface MessageListItem extends Sender {
-  message: string
-  time: number
-}
-type AllMessage = HertType | Message
-type MessageInfo<T extends AllMessage['post_type']> = Omit<Extract<AllMessage, { post_type: T }>, 'post_type'>
 
 // let wsc = new WebSocketCollection()
-// let wsc = new WebSocket("ws://127.0.0.1:6700")
-type Friend = {
-  nickname: string
-  remark: string
-  user_id: number
-}
 const QQ: React.FC<{}> = () => {
   const [content, setContent] = useState<string>("")
   const [state, setState] = useState(0)
   const [imgurl, setImgurl] = useState("")
-  const [messageList, setMessageList] = useState<MessageListItem[]>([{ message: "ssss", user_id: 8786, time: 24, nickname: "5245", age: 0 }])
-  const [friends,setFriends]=useState<Friend[]>([])
+  const [messageList, setMessageList] = useState(qqHelper.messageObj)
+  const [friends,setFriends]=useState(qqHelper.groups)
+  const [selected,setSelected]=useState<{type:Extract<Message,{post_type:'message'}>['message_type'],key:number}|{}>({})
+  // const friends=qqHelper.friends
+  const [showKey,setShowKey]=useState<keyof typeof messageList | ''>('')
   const sendMessage = (message: string) => {
     // if (socket.readyState == WebSocket.OPEN) {
     // 	socket.send(message);
@@ -80,27 +46,20 @@ const QQ: React.FC<{}> = () => {
     //   console.log(err)
     // })
   }
-  async function setFriendsList(){
-    let friends=await getFriendsList()
-    if(friends){
-      setFriends(friends)
-    }
+  // async function setFriendsList(){
+  //   let friends=await Friend.getList()
+  //   if(friends){
+  //     setFriends(friends)
+  //   }
     
-  }
+  // }
   useEffect(() => {
-    setFriendsList()
+    // qqHelper.setFriends=setFriends
+    qqHelper.setMessages=(msg)=>{console.log(msg);setMessageList(msg)}
+    // console.log(qqHelper)
+    // setFriendsList()
     // console.log(os.userInfo())
-    // wsc.onmessage = (message: MessageEvent<string>) => {
-    //   const msg: AllMessage = JSON.parse(message.data)
-    //   // TODO: cq码的处理
-    //   if (msg.post_type == "message") {
-    //     setMessageList(messageList.concat([{
-    //       ...msg.sender,
-    //       time: msg.time,
-    //       message: msg.message
-    //     }]))
-    //   }
-    // }
+    
   }, [])//{\"interval\":5000,\"meta_event_type\":\"heartbeat\",\"po…st_message_time\":1625210920}},\"time\":1625210920}\n
   // useEffect(() => {
   //   https.get("https://tiebapic.baidu.com/forum/pic/item/e61190ef76c6a7ef46147095eafaaf51f3de6657.jpg", (res) => {
@@ -142,12 +101,12 @@ const QQ: React.FC<{}> = () => {
     }
     <div className={style['chat-contact-list']}>
       {
-        friends.map(friend=>{
-          return <div className={style['contact-base-info']} key={friend.user_id}>
+        Object.entries(messageList).map(([key,value])=>{
+          return  <div className={style['contact-base-info']} key={value.senderId} onClick={()=>{setShowKey(key)}}>
             <div className={style['avatar']}></div>
             <div className={style['text']}>
               <div className={style['top']}>
-                <div className={style['name']}>{`${friend.nickname}${friend.remark?`(${friend.remark})`:''}`}</div>
+                <div className={style['name']}>{`${value.senderName}:''`}</div>
                 <div className={style['time']}></div>
               </div>
               <div className={style['message']}></div>
@@ -162,21 +121,23 @@ const QQ: React.FC<{}> = () => {
     <div className={style['chat-content']}>
       <div className={style['chat-title']}></div>
       <div className={style['chat-window']} style={{ backgroundColor: "rgb(121,157,124)" }}>
-        {
-          messageList.map((item, index) => {
-            return <div
-              className={style['chat-raw']}
-              key={index}
-            >
-              <Bubble
-                time={"12:01PM"}
-                position="right"
-                content={item.message}
+        <div className={style['chat-window-content']}>
+          {
+            messageList[showKey]?.message.map((item, index) => {
+              return <div
+                className={style['chat-raw']}
+                key={index}
               >
-              </Bubble>
-            </div>
-          })
-        }
+                <Bubble
+                  time={"12:01PM"}
+                  position="right"
+                  content={item.message}
+                >
+                </Bubble>
+              </div>
+            })
+          }
+        </div>
       </div>
       <div className={style['chat-enter']}>
         <div className={style['chat-image']}>

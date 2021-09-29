@@ -28,7 +28,8 @@ export namespace Schema {
 
 class Blueprint {
 
-    protected fields: Field[] = []
+    protected fields: (Field | string)[] = []
+    protected primaryKey:String[]=[]
     constructor(protected table: string) {
         this.table = table
     }
@@ -64,9 +65,16 @@ class Blueprint {
         return field
     }
 
+    primary(fieldName:string){
+        this.primaryKey.push(fieldName)
+    }
+
 }
 class CreateBlueprint extends Blueprint {
     private valueOf() {
+        if(this.primaryKey.length){
+            this.fields.push(`PRIMARY KEY ("${this.primaryKey.join('","')}")`)
+        }
         return `create table ${this.table}(
     ${this.fields.map(item => {
             return '' + item
@@ -75,25 +83,28 @@ class CreateBlueprint extends Blueprint {
     }
 }
 class UpdateBlueprint extends Blueprint {
+    private valueOf() {
 
+    }
 }
 namespace Blueprint {
     export type FieldType = 'varchar' | 'text' | 'int' | 'bigint' | 'boolean' |
         'date' | 'datetime' | 'decimal' | 'double' | 'float' | 'blob'
 }
 function FieldDecorator(type: Blueprint.FieldType): any {
-    return function (target: Function) {
-        target.prototype.getType = () => {
-            return type
+    return function (BaseCLass: { new(...args: any[]): Field }) {
+        return class extends BaseCLass {
+            protected type = type.toUpperCase()
         }
     }
 }
 abstract class BaseField {
     protected isNotNull: boolean = false
-    protected defaultValue: string = ''
+    protected defaultValue: unknown = ''
     protected length: number | null = null
     protected type: string = 'text'
     protected isChange: boolean = false
+    protected isUnique: boolean = false
     constructor(protected field: string) { }
     notNull() {
         this.isNotNull = true
@@ -103,19 +114,20 @@ abstract class BaseField {
         this.length = length
         return this
     }
-    default(value: string) {
+    default<T>(value: T) {
         this.defaultValue = value
         return this
     }
-    protected getType(): string {
-        return ''
-    }
     protected valueOf() {
-        return `'${this.field.toUpperCase()}' ${this.getType()}` +
-            `${this.length != null ? `(${this.length})` : ''}${this.isNotNull ? ' NOT NULL' : ''}`
+        return `'${this.field}' ${this.type.toUpperCase()}` +
+            `${this.length != null ? `(${this.length})` : ''}`+
+            `${this.defaultValue?typeof this.defaultValue=='string'?`DEFAULT '${this.defaultValue}'`:`DEFAULT ${this.defaultValue}`:`${this.isNotNull || this.isUnique ? ' NOT NULL' : ''}${this.isUnique ? ' UNIQUE' : ''}`}`
     }
     change() {
         this.isChange = true
+    }
+    unique() {
+        this.isUnique = true
     }
 }
 class Field extends BaseField { }

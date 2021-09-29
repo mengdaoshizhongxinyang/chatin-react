@@ -15,7 +15,7 @@ type Migration = {
     let db =await getDB()
     try {
         await db.run(`CREATE TABLE IF NOT EXISTS migrations(name varchar(255) NOT NULL,update_time TIMESTAMP default current_timestamp)`)
-        let migrations = await db.all('select * from migrations')
+        let migrations = await db.all<Migration>('select * from migrations')
         let keyValue = Object.fromEntries(migrations.map(item => {
             return [item.name, true]
         }))
