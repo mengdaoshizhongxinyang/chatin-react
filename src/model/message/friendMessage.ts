@@ -19,7 +19,6 @@ export class FriendMessage extends Model<FriendMessage.Field>{
         'font', 'message', 'message_id',
         'raw_message', 'time', 'user_id'
     ]
-    
 }
 export namespace FriendMessage {
     export type Field = {

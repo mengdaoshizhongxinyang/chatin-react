@@ -4,10 +4,10 @@
  * @Description: 
  */
 import createQQFriendsList210825 from "./createQQFriendsList210825";
-import createQQGroupMessage210913 from "./createQQGroupMessage210913";
+import createQQMessage210913 from "./createQQMessage210913";
 import createQQGroupList210926 from "./createQQGroupList210926";
 export const list=[
     createQQFriendsList210825,
-    createQQGroupMessage210913,
+    createQQMessage210913,
     createQQGroupList210926
 ]

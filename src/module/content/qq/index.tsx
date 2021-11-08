@@ -16,6 +16,7 @@ import { useStore } from "@/reducer";
 import { exec } from "child_process";
 import { Friend } from "@/model";
 import { Message } from "@/model/message";
+import { reactive, ref } from "@/utils/reactUpdate";
 
 
 // let wsc = new WebSocketCollection()
@@ -27,7 +28,9 @@ const QQ: React.FC<{}> = () => {
   const [friends,setFriends]=useState(qqHelper.groups)
   const [selected,setSelected]=useState<{type:Extract<Message,{post_type:'message'}>['message_type'],key:number}|{}>({})
   // const friends=qqHelper.friends
-  const [showKey,setShowKey]=useState<keyof typeof messageList | ''>('')
+  const showKey=ref("")
+  const data=reactive({showKey:""})
+  
   const sendMessage = (message: string) => {
     // if (socket.readyState == WebSocket.OPEN) {
     // 	socket.send(message);
@@ -102,7 +105,7 @@ const QQ: React.FC<{}> = () => {
     <div className={style['chat-contact-list']}>
       {
         Object.entries(messageList).map(([key,value])=>{
-          return  <div className={style['contact-base-info']} key={value.senderId} onClick={()=>{setShowKey(key)}}>
+          return  <div className={style['contact-base-info']} key={value.senderId} onClick={()=>{showKey.value=key}}>
             <div className={style['avatar']}></div>
             <div className={style['text']}>
               <div className={style['top']}>
@@ -116,20 +119,21 @@ const QQ: React.FC<{}> = () => {
       }
     </div>
     <div className={style['chat-border']}>
+      {showKey.value}
       <div className={style['chat-border-handle']}></div>
     </div>
     <div className={style['chat-content']}>
       <div className={style['chat-title']}></div>
-      <div className={style['chat-window']} style={{ backgroundColor: "rgb(121,157,124)" }}>
+      <div className={style['chat-window']} style={{ backgroundColor: "rgb(121,157,124)"}}>
         <div className={style['chat-window-content']}>
           {
-            messageList[showKey]?.message.map((item, index) => {
+            messageList[showKey.value]?.message.map((item, index) => {
               return <div
                 className={style['chat-raw']}
                 key={index}
               >
                 <Bubble
-                  time={"12:01PM"}
+                  time={item.time}
                   position="right"
                   content={item.message}
                 >

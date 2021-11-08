@@ -3,18 +3,13 @@
  * @Date: 2021-09-26 22:15:55
  * @Description: 
  */
-/*
- * @Author: mengdaoshizhongxinyang
- * @Date: 2021-09-06 13:48:19
- * @Description: 
- */
 import { Model } from "../model";
 import { SR } from "@/utils/sr";
 
 export class Group extends Model<Group.Field & Group.Hidden>{
     protected fillable: Model.Fillable<Group.Field> = [
         'group_create_time', 'group_id', 'group_level', 'group_memo',
-        'group_name', 'max_member_count', 'member_count','is_use'
+        'group_name', 'max_member_count', 'member_count', 'is_use'
     ]
 
 }
@@ -30,7 +25,7 @@ export namespace Group {
         is_use: number
     }
     export type Hidden = {
-        
+
     }
     export async function getList(isFresh: boolean = false) {
         let needFresh = isFresh
@@ -52,18 +47,17 @@ export namespace Group {
             return []
         }
     }
-    export async function getOne(id:number) {
+    export async function getOne(id: number) {
         let group = new Group()
         try {
-            return await group.where('group_id',id).first();
+            return await group.where('group_id', id).first();
         } catch (e) {
             console.log(e)
         }
     }
-    export async function active(id:number){
+    export async function active(id: number) {
         try {
-            await new Group().where('group_id',id).update({is_use:1});
-            console.log(222)
+            await new Group().where('group_id', id).update({ is_use: 1 });
         } catch (e) {
             console.log(e)
         }
