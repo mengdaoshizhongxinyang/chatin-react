@@ -25,7 +25,9 @@ const handleFunctions: { [key in CQcode]: (content: string) => React.ReactNode }
     //         var ext = img.src.substring(img.src.lastIndexOf(".")+1).toLowerCase();
     //         var dataURL = canvas.toDataURL("image/"+ext);
     //         return dataURL;
-    return <img src={content.match(/(?<=\[CQ:image,.+?url=)(.+?)(?=\])/)![0]} style={{ display: "none" }}></img>
+    // console.log(content.match(/(?<=\[CQ:image,.+?url=)(.+?)(?=\])/)!)
+    // return <img src={content.match(/(?<=\[CQ:image,.+?url=)(.+?)(?=\])/)![0]} style={{ display: "none" }}></img>
+    return <></>
   }
 }
 
@@ -40,7 +42,8 @@ const bubble: React.FC<Props> = (props) => {
 
   const handleds = contentList?.map(item => {
     const type = item.match(/(?<=\[CQ:)(.+?)(?=[,|\]])/)
-    return handleFunctions[type![0] as CQcode](item)
+    // return handleFunctions[type![0] as CQcode](item)
+    return <></>
   })
 
   if (handleds) {
@@ -52,7 +55,7 @@ const bubble: React.FC<Props> = (props) => {
     data-backcolor="#fff"
     className={`${style['bubble-main']} 
     ${props.position == 'right' ? style['bubble-right'] : style['bubble-left']} ${props.type ? colorType[props.type] : ''}`
-    }>{props.children ? props.children : result}<sub className={style['bubble-main-sub']}>{
+    }>{props.content }<sub className={style['bubble-main-sub']}>{
       props.time ? dayjs(props.time).format("HH:mm") : ''
     }</sub>
   </div>

@@ -17,7 +17,7 @@ import { exec } from "child_process";
 import { Friend } from "@/model";
 import { Message } from "@/model/message";
 import { reactive, ref } from "@/utils/reactUpdate";
-
+const myQQ = 729403918
 
 // let wsc = new WebSocketCollection()
 const QQ: React.FC<{}> = () => {
@@ -25,18 +25,20 @@ const QQ: React.FC<{}> = () => {
   const [state, setState] = useState(0)
   const [imgurl, setImgurl] = useState("")
   const [messageList, setMessageList] = useState(qqHelper.messageObj)
-  const [friends,setFriends]=useState(qqHelper.groups)
-  const [selected,setSelected]=useState<{type:Extract<Message,{post_type:'message'}>['message_type'],key:number}|{}>({})
+  const [friends, setFriends] = useState(qqHelper.friends)
+  const [groups, setGroups] = useState(qqHelper.groups)
+  const [selected, setSelected] = useState<{ type: Extract<Message, { post_type: 'message' }>['message_type'], key: number } | {}>({})
   // const friends=qqHelper.friends
-  const showKey=ref("")
-  const data=reactive({showKey:""})
-  
+  const showKey = ref("")
+  const data = reactive({ showKey: "" })
+
   const sendMessage = (message: string) => {
     // if (socket.readyState == WebSocket.OPEN) {
     // 	socket.send(message);
     // } else {
     // 	alert("连接没有开启.");
     // }
+    
   }
   const request = new HTTPRequest('8080')
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -48,50 +50,46 @@ const QQ: React.FC<{}> = () => {
     // exec('"C:\\Program Files (x86)\\Tencent\\QQ\\Bin\\QQScLauncher.exe"',(err)=>{
     //   console.log(err)
     // })
+    const info=getInfo()
+    if(info){
+      if(info.type=='group'){
+        qqHelper.sendGroup({group_id:info.id,message:content})
+      }
+      if(info.type=='private'){
+        qqHelper.sendPrivate({user_id:info.id,message:content})
+      }
+    }
   }
-  // async function setFriendsList(){
-  //   let friends=await Friend.getList()
-  //   if(friends){
-  //     setFriends(friends)
-  //   }
-    
-  // }
-  useEffect(() => {
-    // qqHelper.setFriends=setFriends
-    qqHelper.setMessages=(msg)=>{console.log(msg);setMessageList(msg)}
-    // console.log(qqHelper)
-    // setFriendsList()
-    // console.log(os.userInfo())
-    
-  }, [])//{\"interval\":5000,\"meta_event_type\":\"heartbeat\",\"po…st_message_time\":1625210920}},\"time\":1625210920}\n
-  // useEffect(() => {
-  //   https.get("https://tiebapic.baidu.com/forum/pic/item/e61190ef76c6a7ef46147095eafaaf51f3de6657.jpg", (res) => {
-  //     let data = ''
-  //     res.setEncoding('binary')
-  //     res.on('data', chunk => {
-  //       data+= chunk
-  //     }).on('end',()=>{
-  //       setImgurl('data:image/png;base64,'+btoa(data))
-  //     })
-  //   })
-  // });
 
-  // let socket = new WebSocket("ws://127.0.0.1:6700/get_msg")
-  // socket.onmessage = (message: MessageEvent<string>) => {
-  //   messageList.push({message:"s",user_id:8786,time:24,nickname:"5245",age:0})
-  //   const msg: HertType | Message = JSON.parse(message.data)
-  //   // setMessageList(messageList.concat([{message:"s",user_id:8786,time:24,nickname:"5245",age:0}]))
-  //   if (msg.post_type=="message") {
-  //     setMessageList(messageList.concat([{
-  //       ...msg.sender,
-  //       time:msg.time,
-  //       message:msg.message
-  //     }]))
-  //   }
-  // };
-  // socket.onopen = function (event) {
-  //   console.log(event)
-  // };
+  useEffect(() => {
+    qqHelper.setMessages = (msg) => { setMessageList(msg) }
+  }, [])
+
+  function getInfo() {
+    let [key, type] = showKey.value.split('_')
+    if (type == 'group') {
+      let temp = groups.filter(item => {
+        return item.group_id == Number(key)
+      })[0]
+      return {
+        name: temp.group_name,
+        id: temp.group_id,
+        type: 'group'
+      } as const
+    }
+    if (type == 'private') {
+      let temp = friends.filter(item => {
+        return item.user_id == Number(key)
+      })[0]
+      return {
+        name: temp.nickname,
+        id: temp.user_id,
+        type: 'private'
+      } as const
+    }
+    return undefined
+  }
+
   async function handleLogin(info: { user: string, password: string }) {
     let result = await request.login(info)
     console.log(result)
@@ -104,8 +102,8 @@ const QQ: React.FC<{}> = () => {
     }
     <div className={style['chat-contact-list']}>
       {
-        Object.entries(messageList).map(([key,value])=>{
-          return  <div className={style['contact-base-info']} key={value.senderId} onClick={()=>{showKey.value=key}}>
+        Object.entries(messageList).map(([key, value]) => {
+          return <div className={style['contact-base-info']} key={value.senderId} onClick={() => { showKey.value = key }}>
             <div className={style['avatar']}></div>
             <div className={style['text']}>
               <div className={style['top']}>
@@ -119,23 +117,24 @@ const QQ: React.FC<{}> = () => {
       }
     </div>
     <div className={style['chat-border']}>
-      {showKey.value}
       <div className={style['chat-border-handle']}></div>
     </div>
     <div className={style['chat-content']}>
-      <div className={style['chat-title']}></div>
-      <div className={style['chat-window']} style={{ backgroundColor: "rgb(121,157,124)"}}>
+      <div className={style['chat-title']}>
+        {getInfo() ? getInfo()?.name : ''}
+      </div>
+      <div className={style['chat-window']} style={{ backgroundColor: "rgb(121,157,124)" }}>
         <div className={style['chat-window-content']}>
           {
             messageList[showKey.value]?.message.map((item, index) => {
               return <div
                 className={style['chat-raw']}
-                key={index}
+                key={item.message_id}
               >
                 <Bubble
                   time={item.time}
-                  position="right"
-                  content={item.message}
+                  position={item.sender.user_id == 729403918 ? 'right' : 'left'}
+                  content={item.raw_message}
                 >
                 </Bubble>
               </div>

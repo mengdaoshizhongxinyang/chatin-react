@@ -6,17 +6,16 @@
   "main": "main.js",
   "scripts": {
     "build": "webpack --config build/webpack.config.js --mode production",
-    "dev": "webpack serve --config build/webpack.config.js",
+    "dev": "set  NODE_OPTIONS=--openssl-legacy-provider && webpack serve --config build/webpack.config.js",
     "deve": "tsc main.ts && electron .",
     "build-webpack-config": "tsc build/webpack.config.ts --esModuleInterop",
-    "buildes": "esbuild ./src/index.tsx --bundle --outfile=out.js"
+    "buildes": "esbuild ./src/index.tsx --bundle --outfile=out.js",
+    "help": "webpack --help"
   },
   "dependencies": {
     "@types/sqlite3": "^3.1.7",
-    "@vscode/sqlite3": "^4.0.12",
     "axios": "^0.21.1",
     "dayjs": "^1.10.4",
-    "dexie": "^3.0.3",
     "electron": "^13.1.4",
     "esbuild": "^0.11.20",
     "gl-matrix": "^3.3.0",
@@ -47,7 +46,7 @@
     "source-map-loader": "^2.0.1",
     "style-loader": "^2.0.0",
     "ts-loader": "^8.0.4",
-    "typescript": "^4.5.1-rc",
+    "typescript": "4.4.4",
     "typescript-plugin-css-modules": "^3.2.0",
     "url-loader": "^4.1.0",
     "webpack": "^5.22.0",

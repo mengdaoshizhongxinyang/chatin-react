@@ -4,6 +4,6 @@
  * @Description: 
  */
 import React from "react";
-const theme:React.FC<{}>=()=>{
+const theme: React.FC<{}> = () => {
     return <style></style>
 }

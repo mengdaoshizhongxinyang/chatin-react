@@ -3,11 +3,13 @@
  * @Date: 2021-07-26 16:24:15
  * @Description: 
  */
-import { sqlite3, verbose, Database } from "sqlite3";
-let sqlite3 = verbose()
+const sql=require("sqlite3")
+import { Database,sqlite3 } from "sqlite3";
+let sqlite:sqlite3 = sql.verbose()
+
 export async function getDB() {
     let db = await (() => new Promise<Database>((resolve, reject) => {
-        let db = new sqlite3.Database('./db.db', (err) => {
+        let db = new sqlite.Database('./db.db', (err) => {
             if (err === null) {
                 resolve(db)
             } else {

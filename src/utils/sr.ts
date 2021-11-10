@@ -4,8 +4,9 @@
  * @Description: send request
  */
 import http from "http";
+import { send } from "process";
 export namespace SR {
-    export function get<T = unknown>(url: string){
+    export function get<T = unknown>(url: string) {
         return new Promise<T>((resolve, reject) => {
             http.get(url, (res) => {
                 let data: T
@@ -20,7 +21,7 @@ export namespace SR {
             })
         })
     }
-    export function getImage(url: string){
+    export function getImage(url: string) {
         //http://q1.qlogo.cn/g?b=qq&nk=729403918&s=640
         //http://p.qlogo.cn/gh/720974149/720974149/640/
         return new Promise<string>((resolve, reject) => {
@@ -34,5 +35,35 @@ export namespace SR {
                 })
             })
         })
+    }
+    export function send(url: string, data: any) {
+        return new Promise(() => {
+            let sendData = JSON.stringify(data)
+            console.log(sendData)
+            const req = http.request({
+                hostname:"127.0.0.1",
+                port:5700,
+                path: "/send_private_msg",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(sendData)
+                }
+            }, (res) => {
+                res.setEncoding("utf-8")
+                res.on('data', d => {
+                    process.stdout.write(d)
+                })
+            })
+            req.on('error', error => {
+                console.error(error)
+            })
+            req.on('connect',res=>{
+                console.log(res)
+            })
+            req.write(sendData)
+            req.end()
+        })
+
     }
 }
