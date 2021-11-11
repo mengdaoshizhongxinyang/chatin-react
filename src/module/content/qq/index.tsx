@@ -38,27 +38,26 @@ const QQ: React.FC<{}> = () => {
     // } else {
     // 	alert("连接没有开启.");
     // }
-    
+
   }
   const request = new HTTPRequest('8080')
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key == 'Enter') {
-      sendMessage(content)
+      handleSend()
+      e.preventDefault()
     }
   }
   const handleSend = () => {
-    // exec('"C:\\Program Files (x86)\\Tencent\\QQ\\Bin\\QQScLauncher.exe"',(err)=>{
-    //   console.log(err)
-    // })
-    const info=getInfo()
-    if(info){
-      if(info.type=='group'){
-        qqHelper.sendGroup({group_id:info.id,message:content})
+    const info = getInfo()
+    if (info) {
+      if (info.type == 'group') {
+        qqHelper.sendGroup({ group_id: info.id, message: content })
       }
-      if(info.type=='private'){
-        qqHelper.sendPrivate({user_id:info.id,message:content})
+      if (info.type == 'private') {
+        qqHelper.sendPrivate({ user_id: info.id, message: content })
       }
     }
+    setContent("")
   }
 
   useEffect(() => {
@@ -128,7 +127,7 @@ const QQ: React.FC<{}> = () => {
           {
             messageList[showKey.value]?.message.map((item, index) => {
               return <div
-                className={style['chat-raw']}
+                className={`${style['chat-raw']} ${style[`chat-raw-${item.sender.user_id == 729403918 ? 'right' : 'left'}`]}`}
                 key={item.message_id}
               >
                 <Bubble
