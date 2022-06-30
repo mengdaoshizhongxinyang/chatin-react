@@ -4,7 +4,6 @@
  * @Description: send request
  */
 import http from "http";
-import { send } from "process";
 export namespace SR {
     export function get<T = unknown>(url: string) {
         return new Promise<T>((resolve, reject) => {
@@ -39,7 +38,6 @@ export namespace SR {
     export function send(url: string, data: any) {
         return new Promise(() => {
             let sendData = JSON.stringify(data)
-            console.log(sendData)
             const req = http.request({
                 hostname:"127.0.0.1",
                 port:5700,

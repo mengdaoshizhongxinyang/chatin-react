@@ -60,8 +60,4 @@ export namespace Friend {
     }
 }
 
-// (async function () {
-//     let t = await new Friend().with('messages').select(['nickname']).first()
-    
-// })()
 

@@ -5,6 +5,7 @@
  */
 import React, { useRef, useState } from "react";
 import { getDB } from "@/utils/db";
+
 const testControl: React.FC<{}> = () => {
   const text = useRef<HTMLTextAreaElement>(null)
   const [arr, setArr] = useState<number[]>([])

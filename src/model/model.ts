@@ -82,7 +82,6 @@ export class Model<T extends { [key in string]: unknown }> implements IModel<T>{
         if (this.tableName == '') {
             this.tableName = inflect().tableize(this.constructor.name)
         }
-        return this
     }
     //
     //
@@ -128,6 +127,7 @@ export class Model<T extends { [key in string]: unknown }> implements IModel<T>{
         return this
     }
 
+
     with<P extends Exclude<{
         [key in keyof this]: this[key] extends () => HasOneRelation ? key : never
     }[keyof this], keyof Model<T>>>(model: P): IModel<T, this, { [key in P]: ReturnRelation<this[P]> }>
@@ -151,7 +151,6 @@ export class Model<T extends { [key in string]: unknown }> implements IModel<T>{
         db.close()
         return data
     }
-
     async first() {
         let db = await getDB()
         let data = await db.get<T>(this.selectSql())
