@@ -21,8 +21,6 @@ export namespace SR {
         })
     }
     export function getImage(url: string) {
-        //http://q1.qlogo.cn/g?b=qq&nk=729403918&s=640
-        //http://p.qlogo.cn/gh/720974149/720974149/640/
         return new Promise<string>((resolve, reject) => {
             http.get(url, (res) => {
                 let temp = ''
